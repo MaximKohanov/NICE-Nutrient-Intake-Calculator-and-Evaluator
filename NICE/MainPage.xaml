@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NICE.MainPage"
+             Title="NICE">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*"
+          Padding="16" RowSpacing="8">
+
+        <Label Grid.Row="0" Text="Lebensmittel eintragen"
+               FontSize="22" FontAttributes="Bold" />
+
+        <!-- Suchfeld: beim Antippen geht die Liste auf, beim Tippen wird gefiltert -->
+        <Entry Grid.Row="1" x:Name="SearchBox"
+               Placeholder="Lebensmittel suchen (hier tippen)"
+               Focused="OnSearchFocused"
+               Unfocused="OnSearchUnfocused"
+               TextChanged="OnSearchChanged"
+               Completed="OnSearchCompleted" />
+
+        <!-- Die Dropdown-Liste: am Anfang unsichtbar -->
+        <CollectionView Grid.Row="2" x:Name="FoodList"
+                        IsVisible="False"
+                        HeightRequest="160"
+                        ItemsSource="{Binding Matches}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnFoodSelected"
+                        EmptyView="Kein Lebensmittel gefunden.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Label}" FontSize="16" Padding="8,10" />
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Label Grid.Row="3" x:Name="SelectedLabel"
+               Text="Noch kein Lebensmittel ausgewählt" />
+
+        <Entry Grid.Row="4" x:Name="QuantityEntry"
+               Placeholder="Menge"
+               Keyboard="Numeric" />
+
+        <Label Grid.Row="5" x:Name="MessageLabel"
+               TextColor="Red" FontSize="13" />
+
+        <Button Grid.Row="6" Text="Eintragen" Clicked="OnAddClicked" />
+
+        <Grid Grid.Row="7" ColumnDefinitions="*,Auto">
+            <Label Grid.Column="0" x:Name="TotalLabel"
+                   FontAttributes="Bold" VerticalOptions="Center" />
+            <Button Grid.Column="1" Text="Neu laden" Clicked="OnReloadClicked" />
+        </Grid>
+
+        <!-- Eingetragene Lebensmittel (vom Backend) mit Löschen-Knopf -->
+        <CollectionView Grid.Row="8" ItemsSource="{Binding Entries}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*,Auto" Padding="0,6">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                            <Label Text="{Binding Detail}" />
+                            <Label Text="{Binding Macros}" FontSize="12" />
+                        </VerticalStackLayout>
+                        <Button Grid.Column="1" Text="Löschen"
+                                VerticalOptions="Center"
+                                Clicked="OnDeleteClicked" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+</ContentPage>
